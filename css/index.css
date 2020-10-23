@@ -1,0 +1,74 @@
+.outter-wrapper {
+            width: 480px;
+            height: 270px;
+            margin: 80px auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .inner-wrapper {
+            width: 3360px;
+            height: 270px;
+            position: absolute;
+            left: -480px;
+        }
+
+        .inner-wrapper img {
+            width: 480px;
+            height: 270px;
+        }
+
+        .allA {
+            position: absolute;
+            bottom: 5px;
+            left: 200px;
+        }
+
+        .allA a {
+            float: left;
+            margin: 3px;
+            width: 8px;
+            height: 8px;
+            background-color: rgb(90, 87, 87);
+            border-radius: 50%;
+            border: 1px white solid;
+        }
+
+        .allA .on {
+            background-color: rgb(108, 237, 241);
+            border: 1px rgb(102, 62, 245) solid;
+        }
+
+        .direction {
+            width: 480px;
+            /* background-color: red; */
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            height: 30px;
+            margin: auto;
+            z-index: 99;
+            font-size: 30px;
+            display: none;
+        }
+        .lefta {
+            position: absolute;
+            left: 5px;
+            color: rgb(226, 248, 247);
+        }
+        .lefta:hover{
+            color: rgb(148, 241, 237);
+        }
+
+        .righta {
+            position: absolute;
+            right: 5px;
+            color: rgb(226, 248, 247);
+        }
+        .righta:hover{
+            color: rgb(148, 241, 237);
+        }
+        
+        .outter-wrapper:hover .direction{
+            display: block;
+        }

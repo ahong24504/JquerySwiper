@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./fa/css/all.css">
+    <link rel="stylesheet" href="./css/index.css">
+    <script src="./js/jquery-1.11.3.js"></script>
+    <script>
+        $(function () {
+            // 准备工作
+            //获取整个外部容器
+            var $outterWrapper = $(".outter-wrapper")
+            //获取所有的图片
+            var $innerWrapper = $(".inner-wrapper")
+            // 获取所有的点点
+            var $allA = $(".allA>a")
+            // 获取左右箭头
+            var $arrows = $(".direction>a")
+            // 要偏移的值
+            var page_width = 480
+            // 每次移动的时间17ms
+            var itemTime = 17
+            // 总共执行400ms
+            var time = 1000
+            // 显示图片的当前下标
+            var index = 0
+            // 设置一个状态，默认为false
+            var moving = false
+
+
+            // 点击向左向右图片，平滑切换到下一页
+            $arrows.first().on("click", function () {
+                // 平滑的翻页
+                nextPage(false)
+
+            })
+            $arrows.eq(1).on("click", function () {
+                // 也是平滑的翻页
+                nextPage(true)
+            })
+
+            // 每隔3s自动滑向下一页
+            var intervalId = setInterval(function () {
+                nextPage(true)
+            }, 3000)
+
+            // 鼠标移入，停止自动切换，鼠标离开，恢复切换
+            $outterWrapper.hover(function () {
+                clearInterval(intervalId)
+            }, function () {
+                intervalId = setInterval(function () {
+                    nextPage(true)
+                }, 3000)
+            })
+            // 点击圆点，翻到指定图片
+            $allA.on("click", function () {
+                // 先获取到目标原点的下标
+                var targetIndex = $(this).index()
+                if (targetIndex != index) {
+                    nextPage(targetIndex)
+                }
+
+            })
+
+            // 平滑翻页函数
+            // 参数一个，可以传布尔值和数值，指定下标页
+            function nextPage(next) {
+
+                if(moving){
+                    return
+                }
+                moving = true//标识正在翻页
+
+                // 总偏移量
+                var offset = 0
+                // 计算偏移量
+                if (typeof next === "boolean") {
+                    offset = next ? -page_width : page_width
+                } else if (typeof next === "number") {
+                    offset = (index - next) * page_width
+                }
+
+                // 计算itemOffset每次偏移的值
+                var itemOffset = offset / (time / itemTime)
+
+                // 获取当前内div的left值
+                var currentLeft = $innerWrapper.position().left
+
+                // 目标位置
+                var targetLeft = currentLeft + offset
+
+
+
+                // 启动循环定时器，不断更新left的值，到达目的地，停止定时器
+                var interValId = setInterval(function () {
+                    currentLeft += itemOffset
+                    // if (currentLeft >= targetLeft) {
+                    //     clearInterval(interValId)
+                    //     currentLeft = targetLeft
+                    // }
+                    if (offset > 0) {
+                        if (currentLeft >= targetLeft) {
+                            clearInterval(interValId)
+                            moving = false
+                            currentLeft = targetLeft
+                            if (currentLeft === 0) {
+                                currentLeft = -2400
+                            } else if (currentLeft === -2880) {
+                                currentLeft = -480
+                            }
+                        }
+                    } else {
+                        if (currentLeft <= targetLeft) {
+                            clearInterval(interValId)
+                            moving = false
+                            currentLeft = targetLeft
+                            if (currentLeft === 0) {
+                                currentLeft = -2400
+                            } else if (currentLeft === -2880) {
+                                currentLeft = -480
+                            }
+                        }
+                    }
+
+                    $innerWrapper.css('left', currentLeft)
+                }, itemTime)
+                // 更新当前原点的颜色
+                updatePoints(next)
+            }
+            // 刷新原点
+            function updatePoints(next) {
+                // 判断next是什么类型
+                if (typeof next === "boolean") {
+                    // 计算出目标原点的下标targetIndex
+                    if (next) {
+                        targetIndex = index + 1
+                        if (targetIndex === 5) {
+                            targetIndex = 0
+                        }
+                    } else {
+                        targetIndex = index - 1
+                        if (targetIndex === -1) {
+                            targetIndex = 4
+                        }
+                    }
+                }else if(typeof next === "number"){
+                    targetIndex = next
+                }
+
+                // 将当前index的a的class去掉
+                // 将目标的点加class = “on”
+                $allA.eq(index).removeClass("on")
+                $allA.eq(targetIndex).addClass("on")
+
+
+                // 将index更新为targetindex
+                index = targetIndex
+            }
+            // 点击原点去指定的页面函数
+
+        })
+
+
+
+    </script>
+
+</head>
+
+<body>
+    <div class="outter-wrapper">
+        <div class="inner-wrapper"><a href="javascript:;"><img src="./img/5.jpg" alt=""></a><a href="javascript:;"><img
+                    src="./img/1.jpg" alt=""></a><a href="javascript:;"><img src="./img/2.jpg" alt=""></a><a
+                href="javascript:;"><img src="./img/3.jpg" alt=""></a><a href="javascript:;"><img src="./img/4.jpg"
+                    alt=""></a><a href="javascript:;"><img src="./img/5.jpg" alt=""></a><a href="javascript:;"><img
+                    src="./img/1.jpg" alt=""></a></div>
+        <div class="allA">
+            <a class="on" href="javascript:;"></a>
+            <a href="javascript:;"></a>
+            <a href="javascript:;"></a>
+            <a href="javascript:;"></a>
+            <a href="javascript:;"></a>
+        </div>
+        <div class="direction">
+            <a href="javascript:;" alt="" class="lefta"><i class="fa fa-angle-left"></i></a>
+            <a href="javascript:;" alt="" class="righta"><i class="	fa fa-angle-right"></i></a>
+        </div>
+    </div>
+
+</body>
+
+</html>
